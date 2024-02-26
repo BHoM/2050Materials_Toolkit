@@ -27,25 +27,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BH.Adapter.SoftwareName
+namespace BH.Adapter.Materials2050
 {
-    public partial class SoftwareNameAdapter : BHoMAdapter
+    public partial class Materials2050Adapter : BHoMAdapter
     {
-        // Basic Delete method that deletes objects depending on their Type and Id. 
-        // It gets called by the Push or by the Remove Adapter Actions.
-        // Its implementation is facultative (not needed for a simple export/import scenario). 
-        // Toolkits need to implement (override) this only to get the full CRUD to work.
-        protected override int IDelete(Type type, IEnumerable<object> ids, ActionConfig actionConfig = null)
+        // This method gets called when appropriate by the Push method contained in the base Adapter class.
+        // Unlike the Create, Delete and Read, this method already exposes a simple implementation: it calls Delete and then Create.
+        // It can be overridden here keeping in mind the following:
+        // - it gets called once per each Type, and if equal objects are found;
+        // - the object equality is tested through this.AdapterComparers, that need to be implemented for each type.
+        // See the wiki for more info.
+
+        protected override bool IUpdate<T>(IEnumerable<T> objects, ActionConfig actionConfig = null)
         {
-            //Insert code here to enable deletion of specific types of objects with specific ids
-            BH.Engine.Base.Compute.RecordError($"Delete for objects of type {type.Name} is not implemented in {(this as dynamic).GetType().Name}.");
-            return 0;
+            return base.IUpdate(objects, actionConfig);
         }
 
-        // There are more virtual Delete methods you might want to override and implement.
-        // Check the base BHoM_Adapter solution and the wiki for more info.
-
         /***************************************************/
+
     }
 }
 

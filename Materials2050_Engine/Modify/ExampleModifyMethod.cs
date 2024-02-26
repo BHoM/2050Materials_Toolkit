@@ -20,31 +20,30 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Adapters.SoftwareName;
 using BH.oM.Base;
 using BH.oM.Base.Attributes;
+using BH.oM.Adapters.Materials2050;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace BH.Engine.Adapters.SoftwareName
+namespace BH.Engine.Adapters.Materials2050
 {
-    public static partial class Create
+    public static partial class Modify
     {
         /***************************************************/
         /**** Public Methods                            ****/
         /***************************************************/
 
         [Description("Description of the method. Will appear in the UI tooltip.")]
-        [Input("someInput1", "Description of the input. Will appear in the UI tooltip.")]
-        [Input("someInput2", "Description of the input. Will appear in the UI tooltip.")]
+        [Input("objectToModify", "Description of the input. Will appear in the UI tooltip.")]
         [Output("outputName", "Description of the output. Will appear in the UI tooltip.")]
-        public static ExampleObject ExampleCreateMethod(string someInput1, int someInput2)
+        public static ExampleObject ExampleCreateMethod(ExampleObject objectToModify)
         {
             // This method will appear in every UI (e.g. Grasshopper) as a component.
             // Find it using the CTRL+Shift+B search bar, or by navigating the `Create` component (Engine tab) right click menu.
-            return new ExampleObject() { SomeStringProperty = someInput1, SomeNumberProperty = someInput2 };
+            throw new NotImplementedException();
         }
 
         /***************************************************/

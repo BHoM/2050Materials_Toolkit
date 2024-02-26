@@ -20,31 +20,39 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Adapters.SoftwareName;
+using BH.oM.Adapters.Materials2050;
 using BH.oM.Base;
+using BH.oM.Base.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BH.Adapter.SoftwareName
+namespace BH.Engine.Adapters.Materials2050
 {
-    public static partial class Convert
+    public static partial class Query
     {
         /***************************************************/
         /**** Public Methods                            ****/
         /***************************************************/
 
-        // Add methods for converting to BHoM from the specific software types. 
-        // Example:
-        public static BHoMObject FromSoftwareName(this ExampleObject node)
+        [Description("Description of the method. Will appear in the UI tooltip.")]
+        [Input("exampleObject", "Description of the input. Will appear in the UI tooltip.")]
+        [Input("additionalInput", "Description of the input. Will appear in the UI tooltip.")]
+        [Output("outputName", "Description of the output. Will appear in the UI tooltip.")]
+        public static string ExampleQueryMethod(this ExampleObject exampleObject, string additionalInput = "")
         {
-            //Insert code for convertion
-            throw new NotImplementedException();
+            // NOTE: Extension method
+            // Query methods should return some data that is derivable from a main input object on which they operate upon. 
+            // For this reason, they are to be written as extension methods (using the `this` keyword on the first input).
+
+            // This method will appear in every UI (e.g. Grasshopper) as a component.
+            // Find it using the CTRL+Shift+B search bar, or by navigating the `Create` component (Engine tab) right click menu.
+            return exampleObject.SomeStringProperty + exampleObject.SomeNumberProperty.ToString() + additionalInput;
         }
 
         /***************************************************/
+
     }
 }
 

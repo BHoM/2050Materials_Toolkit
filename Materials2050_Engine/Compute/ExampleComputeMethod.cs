@@ -20,27 +20,30 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Adapter;
+using BH.oM.Base;
+using BH.oM.Base.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BH.Adapter.SoftwareName
+namespace BH.Engine.Adapters.Materials2050
 {
-    public partial class SoftwareNameAdapter : BHoMAdapter
+    public static partial class Compute
     {
-        // This method gets called when appropriate by the Push method contained in the base Adapter class.
-        // Unlike the Create, Delete and Read, this method already exposes a simple implementation: it calls Delete and then Create.
-        // It can be overridden here keeping in mind the following:
-        // - it gets called once per each Type, and if equal objects are found;
-        // - the object equality is tested through this.AdapterComparers, that need to be implemented for each type.
-        // See the wiki for more info.
+        /***************************************************/
+        /**** Public Methods                            ****/
+        /***************************************************/
 
-        protected override bool IUpdate<T>(IEnumerable<T> objects, ActionConfig actionConfig = null)
+        [Description("Description of the method. Will appear in the UI tooltip.")]
+        [Input("someInput1", "Description of the input. Will appear in the UI tooltip.")]
+        [Input("someInput2", "Description of the input. Will appear in the UI tooltip.")]
+        [Output("outputName", "Description of the output. Will appear in the UI tooltip.")]
+        public static void ExampleComputeMethod(string someInput1, string someInput2)
         {
-            return base.IUpdate(objects, actionConfig);
+            // This method will appear in every UI (e.g. Grasshopper) as a component.
+            // Find it using the CTRL+Shift+B search bar, or by navigating the `Compute` component (Engine tab) right click menu.
+            throw new NotImplementedException();
         }
 
         /***************************************************/

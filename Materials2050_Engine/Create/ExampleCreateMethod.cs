@@ -20,7 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Adapters.SoftwareName;
+using BH.oM.Adapters.Materials2050;
 using BH.oM.Base;
 using BH.oM.Base.Attributes;
 using System;
@@ -28,27 +28,23 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace BH.Engine.Adapters.SoftwareName
+namespace BH.Engine.Adapters.Materials2050
 {
-    public static partial class Query
+    public static partial class Create
     {
         /***************************************************/
         /**** Public Methods                            ****/
         /***************************************************/
 
         [Description("Description of the method. Will appear in the UI tooltip.")]
-        [Input("exampleObject", "Description of the input. Will appear in the UI tooltip.")]
-        [Input("additionalInput", "Description of the input. Will appear in the UI tooltip.")]
+        [Input("someInput1", "Description of the input. Will appear in the UI tooltip.")]
+        [Input("someInput2", "Description of the input. Will appear in the UI tooltip.")]
         [Output("outputName", "Description of the output. Will appear in the UI tooltip.")]
-        public static string ExampleQueryMethod(this ExampleObject exampleObject, string additionalInput = "")
+        public static ExampleObject ExampleCreateMethod(string someInput1, int someInput2)
         {
-            // NOTE: Extension method
-            // Query methods should return some data that is derivable from a main input object on which they operate upon. 
-            // For this reason, they are to be written as extension methods (using the `this` keyword on the first input).
-
             // This method will appear in every UI (e.g. Grasshopper) as a component.
             // Find it using the CTRL+Shift+B search bar, or by navigating the `Create` component (Engine tab) right click menu.
-            return exampleObject.SomeStringProperty + exampleObject.SomeNumberProperty.ToString() + additionalInput;
+            return new ExampleObject() { SomeStringProperty = someInput1, SomeNumberProperty = someInput2 };
         }
 
         /***************************************************/

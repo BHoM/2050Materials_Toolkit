@@ -20,49 +20,29 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Adapter;
-using BH.oM.Base.Attributes;
+//using BH.oM.Adapters.Materials2050;
+using BH.oM.Base;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BH.Adapter.SoftwareName
+namespace BH.Adapter.Materials2050
 {
-    public partial class SoftwareNameAdapter : BHoMAdapter
+    public static partial class Convert
     {
         /***************************************************/
-        /**** Constructors                              ****/
+        /**** Public Methods                            ****/
         /***************************************************/
 
-        [Description("Adapter for SoftwareName.")]
-        [Output("The created SoftwareName adapter.")]
-        public SoftwareNameAdapter()
-        {
-            // The Adapter constructor can be used to configure the Adapter behaviour.
-            // For example:
-            m_AdapterSettings.DefaultPushType = oM.Adapter.PushType.CreateOnly; // Adapter `Push` Action simply calls "Create" method.
-            
-            // See the wiki, the AdapterSettings object and other Adapters to see how it can be configured.
-
-            // If your toolkit needs to define this.AdapterComparers and or this.DependencyTypes,
-            // this constructor has to populate those properties.
-            // See the wiki for more information.
-        }
-
-        // You can add any other constructors that take more inputs here. 
-
-        /***************************************************/
-        /**** Private  Fields                           ****/
-        /***************************************************/
-
-        // You can add any private variable that should be in common to any other adapter methods here.
-        // If you need to add some private methods, please consider first what their nature is:
-        // if a method does not need any external call (API call, connection call, etc.)
-        // we place them in the Engine project, and then reference them from the Adapter.
-        // See the wiki for more information.
+        // Add methods for converting to BHoM from the specific software types. 
+        // Example:
+        //public static BHoMObject FromMaterials2050(this ExampleObject node)
+        //{
+        //    //Insert code for convertion
+        //    throw new NotImplementedException();
+        //}
 
         /***************************************************/
     }

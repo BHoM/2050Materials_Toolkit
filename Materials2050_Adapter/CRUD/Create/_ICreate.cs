@@ -28,9 +28,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BH.Adapter.SoftwareName
+namespace BH.Adapter.Materials2050
 {
-    public partial class SoftwareNameAdapter : BHoMAdapter
+    public partial class Materials2050Adapter : BHoMAdapter
     {
         // NOTE: CRUD folder methods
         // All methods in the CRUD folder are used as "back-end" methods by the Adapter itself.

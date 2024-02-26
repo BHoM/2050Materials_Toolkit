@@ -1,12 +1,12 @@
 using namespace System.IO
 using namespace System.Collections.Generic
 
-$softwareName = Read-Host "`nPlease enter the software name."
+$Materials2050 = Read-Host "`nPlease enter the software name."
 
 try 
 {
-    # Replace occurrences of "SoftwareName" in all files
-    Write-Host "`nReplacing occurrences of 'SoftwareName' with "$softwareName" in all files.`n"
+    # Replace occurrences of "Materials2050" in all files
+    Write-Host "`nReplacing occurrences of 'Materials2050' with "$Materials2050" in all files.`n"
 
     $replace_successful = $true
     Get-ChildItem -File -Recurse | ForEach-Object {
@@ -19,7 +19,7 @@ try
 
         try
         {
-            (Get-Content $_.FullName) -replace 'SoftwareName', $softwareName | Set-Content $_.FullName
+            (Get-Content $_.FullName) -replace 'Materials2050', $Materials2050 | Set-Content $_.FullName
         } 
         catch 
         {
@@ -39,7 +39,7 @@ try
     }
     
 
-    Write-Host "`nRenaming files and directories using "$softwareName":`n"
+    Write-Host "`nRenaming files and directories using "$Materials2050":`n"
 
 
     # Rename files and folders
@@ -47,11 +47,11 @@ try
     $allPaths = [List[string]]::new()
 
 
-    # Get all files and directories containing "SoftwareName" recursively
+    # Get all files and directories containing "Materials2050" recursively
     Get-ChildItem -Recurse -Directory | ForEach-Object {
         $dirpath = $_.FullName
         $dirname = Split-Path  $dirpath -Leaf
-        if ($dirname.Contains("SoftwareName"))
+        if ($dirname.Contains("Materials2050"))
         {
             $stack.Push($dirpath)
             $allPaths.Add($dirpath)
@@ -62,7 +62,7 @@ try
         foreach ($file in [Directory]::EnumerateFiles($dirpath)) 
         {
             $filename = [Path]::GetFileName($file)
-            if ($filename.Contains('SoftwareName') -and -not $allPaths.Contains($file))
+            if ($filename.Contains('Materials2050') -and -not $allPaths.Contains($file))
             {
                 $stack.Push($file)
                 $allPaths.Add($file)
@@ -72,7 +72,7 @@ try
 
     # Add root files
     Get-ChildItem -File | ForEach-Object {
-        if ($_.FullName.Contains("SoftwareName")) {
+        if ($_.FullName.Contains("Materials2050")) {
             $stack.Push($_.FullName)
         }
     }
@@ -84,9 +84,9 @@ try
 
         $filename = [Path]::GetFileName($poppedFullName)
 
-        if($filename.Contains('SoftwareName') -and $pathExists)
+        if($filename.Contains('Materials2050') -and $pathExists)
         {
-            $newName = $filename.Replace('SoftwareName', $softwareName)
+            $newName = $filename.Replace('Materials2050', $Materials2050)
 
             Write-Host "Renaming: " $poppedFullName " to: " $newName
 

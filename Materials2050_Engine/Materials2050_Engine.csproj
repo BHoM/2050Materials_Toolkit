@@ -4,17 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <BaseOutputPath>..\Build\</BaseOutputPath>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
-    <Description>https://github.com/BHoM/SoftwareName_Toolkit</Description>
+    <Description>https://github.com/BHoM/Materials2050_Toolkit</Description>
     <Version>5.0.0</Version>
     <Authors>BHoM</Authors>
     <Copyright>Copyright © https://github.com/BHoM</Copyright>
-    <RootNamespace>BH.Engine.Adapters.SoftwareName</RootNamespace>
+    <RootNamespace>BH.Engine.Adapters.Materials2050</RootNamespace>
     <FileVersion>6.1.0.0</FileVersion>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SoftwareName_oM\SoftwareName_oM.csproj" />
+    <ProjectReference Include="..\Materials2050_oM\Materials2050_oM.csproj" />
   </ItemGroup>
 
   <ItemGroup>

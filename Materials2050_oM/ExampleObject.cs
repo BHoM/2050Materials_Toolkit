@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace BH.oM.Adapters.SoftwareName
+namespace BH.oM.Adapters.Materials2050
 {
     [Description("Object description in here. Will appear in the UI tooltip.")]
     public class ExampleObject : BHoMObject

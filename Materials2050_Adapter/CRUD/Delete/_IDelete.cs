@@ -20,34 +20,32 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Base;
-using BH.oM.Base.Attributes;
+using BH.oM.Adapter;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace BH.Engine.Adapters.SoftwareName
+namespace BH.Adapter.Materials2050
 {
-    public static partial class Compute
+    public partial class Materials2050Adapter : BHoMAdapter
     {
-        /***************************************************/
-        /**** Public Methods                            ****/
-        /***************************************************/
-
-        [Description("Description of the method. Will appear in the UI tooltip.")]
-        [Input("someInput1", "Description of the input. Will appear in the UI tooltip.")]
-        [Input("someInput2", "Description of the input. Will appear in the UI tooltip.")]
-        [Output("outputName", "Description of the output. Will appear in the UI tooltip.")]
-        public static void ExampleComputeMethod(string someInput1, string someInput2)
+        // Basic Delete method that deletes objects depending on their Type and Id. 
+        // It gets called by the Push or by the Remove Adapter Actions.
+        // Its implementation is facultative (not needed for a simple export/import scenario). 
+        // Toolkits need to implement (override) this only to get the full CRUD to work.
+        protected override int IDelete(Type type, IEnumerable<object> ids, ActionConfig actionConfig = null)
         {
-            // This method will appear in every UI (e.g. Grasshopper) as a component.
-            // Find it using the CTRL+Shift+B search bar, or by navigating the `Compute` component (Engine tab) right click menu.
-            throw new NotImplementedException();
+            //Insert code here to enable deletion of specific types of objects with specific ids
+            BH.Engine.Base.Compute.RecordError($"Delete for objects of type {type.Name} is not implemented in {(this as dynamic).GetType().Name}.");
+            return 0;
         }
 
-        /***************************************************/
+        // There are more virtual Delete methods you might want to override and implement.
+        // Check the base BHoM_Adapter solution and the wiki for more info.
 
+        /***************************************************/
     }
 }
 
