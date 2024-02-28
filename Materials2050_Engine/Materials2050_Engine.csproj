@@ -23,6 +23,18 @@
       <Private>false</Private>
       <SpecificVersion>false</SpecificVersion>
     </Reference>
+    <Reference Include="HTTP_oM">
+      <HintPath>..\..\..\ProgramData\BHoM\Assemblies\HTTP_oM.dll</HintPath>
+    </Reference>
+    <Reference Include="LifeCycleAssessment_oM">
+      <HintPath>..\..\..\ProgramData\BHoM\Assemblies\LifeCycleAssessment_oM.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Compute\" />
+    <Folder Include="Modify\" />
+    <Folder Include="Query\" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

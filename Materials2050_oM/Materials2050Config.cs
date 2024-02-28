@@ -1,6 +1,6 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -20,32 +20,39 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-//using BH.oM.Adapters.Materials2050;
-using BH.oM.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BH.oM.Adapter;
+using BH.oM.LifeCycleAssessment;
+using System.ComponentModel;
 
-namespace BH.Adapter.Materials2050
+namespace BH.oM.Adapters.Materials2050
 {
-    public static partial class Convert
+    [Description("This Config can be specified in the `ActionConfig` input of any Adapter Action (e.g. Push).")]
+    // Note: this will get passed within any CRUD method (see their signature). 
+
+    public class Materials2050Config : ActionConfig
     {
         /***************************************************/
-        /**** Public Methods                            ****/
+        /**** Public Properties                         ****/
         /***************************************************/
 
-        // Add methods for converting from BHoM to the specific software types
-        // Example:
-        //public static ExampleObject ToMaterials2050(this BHoMObject node)
-        //{
-        //    //Insert code for convertion
-        //    throw new NotImplementedException();
-        //}
+        [Description("The Type of Environmental Product Declaration")]
+        public virtual EPDType Type { get; set; } = EPDType.Product;
+
+        [Description("Specifies ID to search and return objects for in 2050 Materials. If this is specified it supersedes other input parameters.")]
+        public virtual string Id { get; set; } = null;
+
+        [Description("Sets maximum amount of items to return from 2050 Materials")]
+        public virtual int Count { get; set; } = 1;
+
+        [Description("Specifies string to search and return objects for in 2050 Materials, ie RedBuilt RedLam LVL")]
+        public virtual string NameLike { get; set; } = null;
+
+        [Description("Specifies plant name to search and return objects for in 2050 Materials, ie Dupont")]
+        public virtual string PlantName { get; set; } = null;
 
         /***************************************************/
     }
 }
+
 
 
