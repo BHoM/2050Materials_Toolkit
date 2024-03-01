@@ -113,7 +113,7 @@ namespace BH.Adapter.Materials2050
 
             EnvironmentalProductDeclaration epd = new EnvironmentalProductDeclaration
             {
-                Type = config.Type,
+                //Type = config.Type,
                 EnvironmentalMetrics = new List<EnvironmentalMetric> { metric },
                 QuantityType = quantityType,
                 Name = obj.PropertyValue("name")?.ToString() ?? "",

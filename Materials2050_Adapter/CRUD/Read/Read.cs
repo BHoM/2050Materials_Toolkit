@@ -23,12 +23,15 @@
 using BH.Engine.Adapters.HTTP;
 using BH.oM.Adapter;
 using BH.oM.Adapters.Materials2050;
+using BH.Engine.Adapters.Materials2050;
 using BH.oM.Adapters.HTTP;
 using BH.oM.Base;
 using BH.oM.LifeCycleAssessment.MaterialFragments;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using BH.Engine.Base;
+using BH.Engine.Reflection;
 
 namespace BH.Adapter.Materials2050
 {
@@ -53,27 +56,23 @@ namespace BH.Adapter.Materials2050
         /***************************************************/
         /**** Private specific read methods             ****/
         /***************************************************/
-        private List<EnvironmentalProductDeclaration> ReadEnvironmentalProductDeclaration(List<string> ids = null, Materials2050Config config = null)
+        private List<CustomObject> ReadEnvironmentalProductDeclaration(List<string> ids = null, Materials2050Config config = null)
         {
             int count = config.Count;
             string name = config.NameLike;
-            string plantName = config.PlantName;
-            string id = config.Id;
+
+            string refreshedToken = BH.Engine.Adapters.Materials2050.Create.RefreshAPIToken(m_apiToken);
 
             //Create GET Request
             GetRequest epdGetRequest;
-            if (id == null)
-            {
-                epdGetRequest = BH.Engine.Adapters.Materials2050.Create.Materials2050Request("epds", m_apiToken, config);
-            }
-            else
-            {
-                epdGetRequest = BH.Engine.Adapters.Materials2050.Create.Materials2050Request("epds/" + id, m_apiToken, config);
-            }
+
+            //Pass the refreshed token to the subsequent API calls
+            epdGetRequest = BH.Engine.Adapters.Materials2050.Create.Materials2050Request("get_products_open_api", refreshedToken, config);
+
 
             string reqString = epdGetRequest.ToUrlString();
             string response = BH.Engine.Adapters.HTTP.Compute.MakeRequest(epdGetRequest);
-            List<object> responseObjs = null;
+            List<CustomObject> responseObjs = new List<CustomObject>();
 
             if (response == null)
             {
@@ -84,11 +83,11 @@ namespace BH.Adapter.Materials2050
             else if (response.StartsWith("{"))
             {
                 response = "[" + response + "]";
-                responseObjs = new List<object>() { Engine.Serialiser.Convert.FromJsonArray(response) };
+                responseObjs.AddRange(Engine.Serialiser.Convert.FromJsonArray(response) as List<CustomObject>);
             }
             else if (response.StartsWith("["))
             {
-                responseObjs = new List<object>() { Engine.Serialiser.Convert.FromJsonArray(response) };
+                responseObjs.AddRange(Engine.Serialiser.Convert.FromJsonArray(response) as List<CustomObject>);
             }
             else
             {
@@ -96,19 +95,21 @@ namespace BH.Adapter.Materials2050
                 return null;
             }
 
-            //Convert nested customObject from serialization to list of epdData objects
-            List<EnvironmentalProductDeclaration> epdDataFromRequest = new List<EnvironmentalProductDeclaration>();
-            object epdObjects = responseObjs[0];
-            IEnumerable objList = epdObjects as IEnumerable;
-            if (objList != null)
-            {
-                foreach (CustomObject co in objList)
-                {
-                    EnvironmentalProductDeclaration epdData = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co, config);
-                    epdDataFromRequest.Add(epdData);
-                }
-            }
-            return epdDataFromRequest;
+            return responseObjs;
+
+            ////Convert nested customObject from serialization to list of epdData objects
+            //List<EnvironmentalProductDeclaration> epdDataFromRequest = new List<EnvironmentalProductDeclaration>();
+            //object epdObjects = responseObjs[0];
+            //IEnumerable objList = epdObjects as IEnumerable;
+            //if (objList != null)
+            //{
+            //    foreach (CustomObject co in objList)
+            //    {
+            //        EnvironmentalProductDeclaration epdData = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co, config);
+            //        epdDataFromRequest.Add(epdData);
+            //    }
+            //}
+            //return epdDataFromRequest;
         }
 
         /***************************************************/

@@ -40,21 +40,21 @@ namespace BH.Engine.Adapters.Materials2050
         [Output("GetRequest", "A GetRequest with 2050 Materials specific headers and uri")]
         public static GetRequest Materials2050Request(string apiCommand, string apiToken, Materials2050Config parameters = null)
         {
-            Dictionary<string, object> param = new Dictionary<string, object>();
-            if (parameters.Count > 0)
-                param.Add("page_size", parameters.Count);
+            //Dictionary<string, object> param = new Dictionary<string, object>();
+            //if (parameters.Count > 0)
+            //    param.Add("page_size", parameters.Count);
 
-            if (parameters.NameLike != null && parameters.NameLike != "")
-                param.Add("name__like", parameters.NameLike);
+            //if (parameters.NameLike != null && parameters.NameLike != "")
+            //    param.Add("name__like", parameters.NameLike);
 
             return new BH.oM.Adapters.HTTP.GetRequest
             {
-                BaseUrl = "http://app.2050-materials.com/developer/api/" + apiCommand,
+                BaseUrl = "https://app.2050-materials.com/developer/api/" + apiCommand,
                 Headers = new Dictionary<string, object>()
                 {
                     { "Authorization", "Bearer " + apiToken }
                 },
-                Parameters = param
+                Parameters = null
             };
         }
         /***************************************************/

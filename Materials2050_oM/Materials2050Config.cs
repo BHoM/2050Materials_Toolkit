@@ -35,20 +35,11 @@ namespace BH.oM.Adapters.Materials2050
         /**** Public Properties                         ****/
         /***************************************************/
 
-        [Description("The Type of Environmental Product Declaration")]
-        public virtual EPDType Type { get; set; } = EPDType.Product;
-
-        [Description("Specifies ID to search and return objects for in 2050 Materials. If this is specified it supersedes other input parameters.")]
-        public virtual string Id { get; set; } = null;
-
         [Description("Sets maximum amount of items to return from 2050 Materials")]
         public virtual int Count { get; set; } = 1;
 
         [Description("Specifies string to search and return objects for in 2050 Materials, ie RedBuilt RedLam LVL")]
         public virtual string NameLike { get; set; } = null;
-
-        [Description("Specifies plant name to search and return objects for in 2050 Materials, ie Dupont")]
-        public virtual string PlantName { get; set; } = null;
 
         /***************************************************/
     }

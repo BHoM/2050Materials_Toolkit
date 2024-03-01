@@ -61,6 +61,9 @@
     <Reference Include="Physical_oM">
       <HintPath>..\..\..\ProgramData\BHoM\Assemblies\Physical_oM.dll</HintPath>
     </Reference>
+    <Reference Include="Reflection_Engine">
+      <HintPath>..\..\..\ProgramData\BHoM\Assemblies\Reflection_Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Serialiser_Engine">
       <HintPath>..\..\..\ProgramData\BHoM\Assemblies\Serialiser_Engine.dll</HintPath>
     </Reference>
