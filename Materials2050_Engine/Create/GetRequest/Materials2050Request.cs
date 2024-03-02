@@ -1,6 +1,6 @@
 ﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -22,6 +22,7 @@
 using BH.oM.Adapters.HTTP;
 using BH.oM.Adapters.Materials2050;
 using BH.oM.Base.Attributes;
+using BH.oM.LifeCycleAssessment;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -40,12 +41,22 @@ namespace BH.Engine.Adapters.Materials2050
         [Output("GetRequest", "A GetRequest with 2050 Materials specific headers and uri")]
         public static GetRequest Materials2050Request(string apiCommand, string apiToken, Materials2050Config parameters = null)
         {
-            //Dictionary<string, object> param = new Dictionary<string, object>();
-            //if (parameters.Count > 0)
-            //    param.Add("page_size", parameters.Count);
+            Dictionary<string, object> param = new Dictionary<string, object>();
 
-            //if (parameters.NameLike != null && parameters.NameLike != "")
-            //    param.Add("name__like", parameters.NameLike);
+            if (parameters.Page > 1)
+                param.Add("page", parameters.Page);
+
+            if (parameters.NameLike != null && parameters.NameLike != "")
+                param.Add("name", parameters.NameLike);
+
+            if(parameters.MaterialType != null && parameters.MaterialType >= 0)
+                param.Add("material_types" , parameters.MaterialType);
+
+            if (parameters.SortBy != SortBy.Undefined)
+                param.Add("sort_by", parameters.SortBy);
+
+            if (parameters.GroupBy != GroupBy.Undefined)
+                param.Add("group_by", parameters.GroupBy);
 
             return new BH.oM.Adapters.HTTP.GetRequest
             {
@@ -54,7 +65,7 @@ namespace BH.Engine.Adapters.Materials2050
                 {
                     { "Authorization", "Bearer " + apiToken }
                 },
-                Parameters = null
+                Parameters = param
             };
         }
         /***************************************************/

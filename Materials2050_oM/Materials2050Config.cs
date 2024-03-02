@@ -1,6 +1,6 @@
 ﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -22,6 +22,7 @@
 
 using BH.oM.Adapter;
 using BH.oM.LifeCycleAssessment;
+using System;
 using System.ComponentModel;
 
 namespace BH.oM.Adapters.Materials2050
@@ -35,11 +36,21 @@ namespace BH.oM.Adapters.Materials2050
         /**** Public Properties                         ****/
         /***************************************************/
 
-        [Description("Sets maximum amount of items to return from 2050 Materials")]
-        public virtual int Count { get; set; } = 1;
+        [Description("All results from the 2050 Materials API are paginated to reduce API call count.")]
+        public virtual int Page { get; set; } = 1;
 
-        [Description("Specifies string to search and return objects for in 2050 Materials, ie RedBuilt RedLam LVL")]
+        [Description("Specifies string to search and return objects for in 2050 Materials, ie RedBuilt RedLam LVL.")]
         public virtual string NameLike { get; set; } = null;
+
+        // Make this an enum when types can be identified by the 2050 Materials group. Int associations are currently unknown, but still function as api calls. 
+        [Description("Setting this will return materials of a specific type. Types can be found on 2050 Materials Documentation.")]
+        public virtual int? MaterialType { get; set; } = null;
+
+        [Description("Sort all results by a specified sort by option.")]
+        public virtual SortBy SortBy { get; set; } = SortBy.Undefined;
+
+        [Description("Group all results by a specified group by option.")]
+        public virtual GroupBy GroupBy { get; set; } = GroupBy.Undefined;
 
         /***************************************************/
     }

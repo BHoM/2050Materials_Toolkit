@@ -1,6 +1,6 @@
 ﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -56,9 +56,12 @@ namespace BH.Adapter.Materials2050
         /***************************************************/
         /**** Private specific read methods             ****/
         /***************************************************/
-        private List<CustomObject> ReadEnvironmentalProductDeclaration(List<string> ids = null, Materials2050Config config = null)
+
+        // return EPD objects
+
+        private List<EnvironmentalProductDeclaration> ReadEnvironmentalProductDeclaration(List<string> ids = null, Materials2050Config config = null)
         {
-            int count = config.Count;
+            //int count = config.Count;
             string name = config.NameLike;
 
             string refreshedToken = BH.Engine.Adapters.Materials2050.Create.RefreshAPIToken(m_apiToken);
@@ -72,7 +75,7 @@ namespace BH.Adapter.Materials2050
 
             string reqString = epdGetRequest.ToUrlString();
             string response = BH.Engine.Adapters.HTTP.Compute.MakeRequest(epdGetRequest);
-            List<CustomObject> responseObjs = new List<CustomObject>();
+            List<object> responseObjs = new List<object>();
 
             if (response == null)
             {
@@ -83,11 +86,11 @@ namespace BH.Adapter.Materials2050
             else if (response.StartsWith("{"))
             {
                 response = "[" + response + "]";
-                responseObjs.AddRange(Engine.Serialiser.Convert.FromJsonArray(response) as List<CustomObject>);
+                responseObjs = new List<object>() { Engine.Serialiser.Convert.FromJsonArray(response) };
             }
             else if (response.StartsWith("["))
             {
-                responseObjs.AddRange(Engine.Serialiser.Convert.FromJsonArray(response) as List<CustomObject>);
+                responseObjs = new List<object>() { Engine.Serialiser.Convert.FromJsonArray(response) };
             }
             else
             {
@@ -95,21 +98,19 @@ namespace BH.Adapter.Materials2050
                 return null;
             }
 
-            return responseObjs;
-
-            ////Convert nested customObject from serialization to list of epdData objects
-            //List<EnvironmentalProductDeclaration> epdDataFromRequest = new List<EnvironmentalProductDeclaration>();
-            //object epdObjects = responseObjs[0];
-            //IEnumerable objList = epdObjects as IEnumerable;
-            //if (objList != null)
-            //{
-            //    foreach (CustomObject co in objList)
-            //    {
-            //        EnvironmentalProductDeclaration epdData = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co, config);
-            //        epdDataFromRequest.Add(epdData);
-            //    }
-            //}
-            //return epdDataFromRequest;
+            //Convert nested customObject from serialization to list of epdData objects
+            List<EnvironmentalProductDeclaration> epdDataFromRequest = new List<EnvironmentalProductDeclaration>();
+            object epdObjects = responseObjs[0];
+            IEnumerable objList = epdObjects as IEnumerable;
+            if (objList != null)
+            {
+                foreach (CustomObject co in objList)
+                {
+                    EnvironmentalProductDeclaration epdData = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co, config);
+                    epdDataFromRequest.Add(epdData);
+                }
+            }
+            return epdDataFromRequest;
         }
 
         /***************************************************/
