@@ -33,6 +33,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using BH.oM.Adapters.Materials2050;
+using BH.oM.Materials2050;
 
 namespace BH.Adapter.Materials2050
 {
@@ -46,6 +47,44 @@ namespace BH.Adapter.Materials2050
         {
             int result = 0;
 
+            // CustomObjects will vary based on which API is used for the query
+            Enum apiT = config.APIName;
+            if (config != null)
+            {
+                switch (apiT)
+                {
+                    case APIName.Undefined:
+                        {
+                            BH.Engine.Base.Compute.RecordError($"No objects were pulled. {apiT} API was used for the query.");
+                            break;
+                        }
+                    case APIName.OpenAPI:
+                        {
+                            fromOpenAPI(obj, config);
+                            break;
+                        }
+                    case APIName.GenericMaterialsAPI:
+                        {
+                            BH.Engine.Base.Compute.RecordError($"The {apiT} API has not yet been implemented, no objects were created from the API query. Please use the OpenAPI.");
+                            break;
+                        }
+                    case APIName.ProductAPI:
+                        {
+                            BH.Engine.Base.Compute.RecordError($"The {apiT} API has not yet been implemented, no objects were created from the API query. Please use the OpenAPI.");
+                            break;
+                        }
+                    case APIName.GlobalWarmingAPI:
+                        {
+                            BH.Engine.Base.Compute.RecordError($"The {apiT} API has not yet been implemented, no objects were created from the API query. Please use the OpenAPI.");
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+
+
+            // create variables for each customObject property
             IEnumerable<string> standards = null;
             if (obj.PropertyValue("industry_standards") != null)
                 standards = obj.PropertyValue("industry_standards") as IEnumerable<string>;
@@ -87,10 +126,12 @@ namespace BH.Adapter.Materials2050
                 jurisdictionNames = jurisdictionNames.Trim();
             }
 
-            double nan = double.NaN;
+            double unused = double.NaN;
 
-            ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(nan, nan, nan, gwpVal, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan);
+            // create a new climate total metric
+            ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(unused, unused, unused, gwpVal, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused);
 
+            // create additional data fragment from customObject
             AdditionalEPDData data = new AdditionalEPDData
             {
                 Description = obj.PropertyValue("description")?.ToString() ?? "",
@@ -106,11 +147,13 @@ namespace BH.Adapter.Materials2050
                 ReferenceYear = referenceYear,
             };
 
+            // create a density fragment from customObject => variable
             EPDDensity densityFragment = new EPDDensity
             {
                 Density = density,
             };
 
+            // create a new epd object
             EnvironmentalProductDeclaration epd = new EnvironmentalProductDeclaration
             {
                 //Type = config.Type,
@@ -132,6 +175,32 @@ namespace BH.Adapter.Materials2050
             {
                 return epdData;
             }
+        }
+
+        /***************************************************/
+
+        public static EnvironmentalProductDeclaration fromOpenAPI(CustomObject co, Materials2050Config config)
+        {
+            // OpenAPI call object schema
+
+            // basic results parsing data
+            int totalCount = (int)co.PropertyValue("TotalProducts");
+            int totalPageCount = (int)co.PropertyValue("countProductsOnPage");
+            int currentPage = (int)co.PropertyValue("current_page");
+            string range = co.PropertyValue("product_range").ToString();
+            string next = co.PropertyValue("next").ToString();
+            string previous = co.PropertyValue("previous").ToString();
+
+            // Results contains all material data
+            if(co.PropertyValue("results") != null)
+            {
+                foreach (var result in co.CustomData)
+                {
+                    // 
+                }
+            }
+
+            return null;
         }
 
         /***************************************************/

@@ -32,6 +32,8 @@ using System.Collections;
 using System.Collections.Generic;
 using BH.Engine.Base;
 using BH.Engine.Reflection;
+using BH.oM.LifeCycleAssessment;
+using BH.oM.Materials2050;
 
 namespace BH.Adapter.Materials2050
 {
@@ -57,23 +59,61 @@ namespace BH.Adapter.Materials2050
         /**** Private specific read methods             ****/
         /***************************************************/
 
-        // return EPD objects
-
         private List<EnvironmentalProductDeclaration> ReadEnvironmentalProductDeclaration(List<string> ids = null, Materials2050Config config = null)
         {
-            //int count = config.Count;
-            string name = config.NameLike;
+            // Determine the API type to be used for the request
+            string apiName = "";
+            Enum apiT = config.APIName;
+            if(config != null)
+            {
+                switch (apiT)
+                {
+                    case APIName.Undefined:
+                        {
+                            apiName = "";
+                            BH.Engine.Base.Compute.RecordError("Please select which API you would like to query.");
+                            break;
+                        }
+                    case APIName.OpenAPI:
+                        {
+                            apiName = "get_products_open_api";
+                            BH.Engine.Base.Compute.RecordNote($"Using {apiT} for all queries.");
+                            break;
+                        }
+                    case APIName.GenericMaterialsAPI:
+                        {
+                            apiName = "get_generic_materials";
+                            BH.Engine.Base.Compute.RecordError($"The {apiT} API has not yet been implemented. Please use the OpenAPI.");
+                            break;
+                        }
+                    case APIName.ProductAPI:
+                        {
+                            apiName = "get_products";
+                            BH.Engine.Base.Compute.RecordError($"The {apiT} API has not yet been implemented. Please use the OpenAPI.");
+                            break;
+                        }
+                    case APIName.GlobalWarmingAPI:
+                        {
+                            apiName = "get_co2_warming_potential";
+                            BH.Engine.Base.Compute.RecordError($"The {apiT} API has not yet been implemented. Please use the OpenAPI.");
+                            break;
+                        }
+                    default:
+                        apiName = "get_products_open_api";
+                        break;
+                }
+            }
+            else
+            {
+                apiName = "get_products_open_api";
+            }
 
+            // Refresh the API Token automatically
             string refreshedToken = BH.Engine.Adapters.Materials2050.Create.RefreshAPIToken(m_apiToken);
 
             //Create GET Request
-            GetRequest epdGetRequest;
+            GetRequest epdGetRequest = BH.Engine.Adapters.Materials2050.Create.Materials2050Request(apiName, refreshedToken, config);
 
-            //Pass the refreshed token to the subsequent API calls
-            epdGetRequest = BH.Engine.Adapters.Materials2050.Create.Materials2050Request("get_products_open_api", refreshedToken, config);
-
-
-            string reqString = epdGetRequest.ToUrlString();
             string response = BH.Engine.Adapters.HTTP.Compute.MakeRequest(epdGetRequest);
             List<object> responseObjs = new List<object>();
 

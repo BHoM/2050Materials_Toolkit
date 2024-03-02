@@ -25,6 +25,7 @@ using BH.oM.Base.Attributes;
 using BH.oM.LifeCycleAssessment;
 using System.Collections.Generic;
 using System.ComponentModel;
+using BH.oM.Materials2050;
 
 namespace BH.Engine.Adapters.Materials2050
 {

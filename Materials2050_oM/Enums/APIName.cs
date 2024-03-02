@@ -27,19 +27,14 @@ using System.Text;
 
 namespace BH.oM.Materials2050
 {
-    [Description("Enum of all available group by options. Used for filtering material data.")]
-    public enum GroupBy
+    [Description("All 2050 Materials APIs. OpenAPI is free to use and requires a 2050 Materials account. All other APIs are purchasable from 2050 Materials")]
+    public enum APIName
     {
         Undefined,
-        BuildingApplications,
-        BuildingTypes,
-        CertificationTypes,
-        CompanyName,
-        Continent,
-        Material,
-        ManufacturingLocation,
-        PriceRange,
-        ProductType
+        GenericMaterialsAPI,
+        GlobalWarmingAPI,
+        OpenAPI,
+        ProductAPI
     }
 }
 

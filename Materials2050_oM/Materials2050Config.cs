@@ -21,9 +21,9 @@
  */
 
 using BH.oM.Adapter;
-using BH.oM.LifeCycleAssessment;
 using System;
 using System.ComponentModel;
+using BH.oM.Materials2050;
 
 namespace BH.oM.Adapters.Materials2050
 {
@@ -35,6 +35,9 @@ namespace BH.oM.Adapters.Materials2050
         /***************************************************/
         /**** Public Properties                         ****/
         /***************************************************/
+
+        [Description("Please specify the API you would like to query. OpenAPI is the default option and is free to use (rate limited). All other options require subscriptions. More information can be found on 2050 Materials Website.")]
+        public virtual APIName APIName { get; set; } = APIName.OpenAPI;
 
         [Description("All results from the 2050 Materials API are paginated to reduce API call count.")]
         public virtual int Page { get; set; } = 1;

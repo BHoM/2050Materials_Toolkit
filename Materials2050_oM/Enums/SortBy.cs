@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace BH.oM.LifeCycleAssessment
+namespace BH.oM.Materials2050
 {
     [Description("Enum of all available sort by options. Used for filtering material data.")]
     public enum SortBy
