@@ -78,7 +78,7 @@ namespace BH.Adapter.Materials2050
                     case APIName.OpenAPI:
                         {
                             apiName = "get_products_open_api";
-                            BH.Engine.Base.Compute.RecordNote($"Using {apiT} for all queries.");
+                            BH.Engine.Base.Compute.RecordNote($"Using {apiT} for all queries. All metrics will be reported as A3 ClimateChangeTotalMetrics.");
                             break;
                         }
                     case APIName.GenericMaterialsAPI:

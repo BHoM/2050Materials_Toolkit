@@ -126,15 +126,15 @@ namespace BH.Adapter.Materials2050
             CustomObject materialObj = co.CustomData["material_facts"] as CustomObject;
 
             double unused = double.NaN;
-            double a1toa3 = double.NaN;
+            double a3 = double.NaN;
 
             try
             {
-                a1toa3 = (double)materialObj.CustomData["manufacturing"];
+                a3 = (double)materialObj.CustomData["manufacturing"];
             }
             catch { }
 
-            ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(unused, unused, unused, a1toa3, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused);
+            ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(unused, unused, a3, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused);
 
             epd.QuantityType = GetQuantityTypeFromString(materialObj.CustomData["declared_unit"] as string);
             epd.EnvironmentalMetrics.Add(metric);
