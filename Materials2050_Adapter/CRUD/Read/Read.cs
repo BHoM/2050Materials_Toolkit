@@ -140,10 +140,11 @@ namespace BH.Adapter.Materials2050
             }
 
             //Convert nested customObject from serialization to list of epdData objects
-            List<EnvironmentalProductDeclaration> epdDataFromRequest = new List<EnvironmentalProductDeclaration>();
             List<EnvironmentalProductDeclaration> epds = new List<EnvironmentalProductDeclaration>();
+            EnvironmentalProductDeclaration epd = new EnvironmentalProductDeclaration();
             object epdObjects = responseObjs[0];
             IEnumerable objList = epdObjects as IEnumerable;
+            int resultCount = 0;
 
             if (objList != null)
             {
@@ -156,7 +157,9 @@ namespace BH.Adapter.Materials2050
 
                         foreach (CustomObject co2 in resultsObjs)
                         {
-                            epds = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co2, config, resultsObjs);
+                            epd = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co2, config);
+                            epds.Add(epd);
+                            resultCount++;
                         }
                     }
                     catch (Exception ex)
@@ -166,6 +169,7 @@ namespace BH.Adapter.Materials2050
                     }
                 }
             }
+            BH.Engine.Base.Compute.RecordNote($"{resultCount} EPDs have been converted from the 2050 Materials {apiT} request.");
             return epds;
         }
 

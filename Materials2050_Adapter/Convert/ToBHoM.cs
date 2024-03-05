@@ -34,6 +34,7 @@ using System.Text.RegularExpressions;
 
 using BH.oM.Adapters.Materials2050;
 using BH.oM.Materials2050;
+using BH.oM.Materials2050.Fragments;
 
 namespace BH.Adapter.Materials2050
 {
@@ -43,10 +44,10 @@ namespace BH.Adapter.Materials2050
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static List<EnvironmentalProductDeclaration> ToEnvironmentalProductDeclaration(this CustomObject obj, Materials2050Config config, List<CustomObject> resultsObjs)
+        public static EnvironmentalProductDeclaration ToEnvironmentalProductDeclaration(this CustomObject obj, Materials2050Config config)
         {
-            List<EnvironmentalProductDeclaration> epd = new List<EnvironmentalProductDeclaration>();
-            int resultCount = 0;
+            EnvironmentalProductDeclaration epd = new EnvironmentalProductDeclaration();
+            List<EnvironmentalProductDeclaration> epdList = new List<EnvironmentalProductDeclaration>();
 
             // CustomObjects will vary based on which API is used for the query
             // Only OpenAPI is implemented right now
@@ -62,8 +63,7 @@ namespace BH.Adapter.Materials2050
                         }
                     case APIName.OpenAPI:
                         {
-                            epd = fromOpenAPI(obj, config, resultsObjs);
-                            resultCount++;
+                            epd = fromOpenAPI(obj);
                             break;
                         }
                     case APIName.GenericMaterialsAPI:
@@ -84,7 +84,6 @@ namespace BH.Adapter.Materials2050
                     default:
                         break;
                 }
-                BH.Engine.Base.Compute.RecordNote($"The {apiT} pull returned {resultCount} EPDs from 2050 Materials.");
                 return epd;
             }
             else
@@ -94,161 +93,56 @@ namespace BH.Adapter.Materials2050
             }
         }
 
-
-        //    // create variables for each customObject property
-        //    IEnumerable<string> standards = null;
-        //    if (obj.PropertyValue("industry_standards") != null)
-        //        standards = obj.PropertyValue("industry_standards") as IEnumerable<string>;
-
-        //    string declaredUnit = obj.PropertyValue("declared_unit")?.ToString() ?? "";
-        //    string epdUnit = GetUnitsFromString(declaredUnit);
-        //    double declaredVal = GetValFromString(declaredUnit);
-        //    QuantityType quantityType = GetQuantityTypeFromString(epdUnit);
-        //    double epdUnitMult = ConvertToSI(1 / declaredVal, epdUnit);
-
-        //    string densityString = obj.PropertyValue("density")?.ToString() ?? "";
-        //    double densityVal = GetValFromString(densityString);
-        //    string densityUnits = GetUnitsFromString(densityString);
-        //    double density = ConvertToSI(densityVal, densityUnits);
-        //    string gwp = obj.PropertyValue("gwp")?.ToString() ?? "";
-        //    double gwpVal = (gwp == "") ? double.NaN : System.Convert.ToDouble(gwp.Substring(0, gwp.IndexOf(" "))) * epdUnitMult;
-        //    int lifespan = (int)(obj.PropertyValue("reference_service_life") ?? 0);
-        //    int referenceYear = int.TryParse(obj.PropertyValue("date_of_issue")?.ToString() ?? "", out result) ? result : 0;
-
-        //    string publisherNames = "";
-        //    if (obj.PropertyValue("publishers") != null)
-        //    {
-        //        IEnumerable pubs = (IEnumerable)obj.PropertyValue("publishers");
-        //        foreach (CustomObject pub in pubs)
-        //        {
-        //            publisherNames += pub.ToString() + " ";
-        //        }
-        //        publisherNames = publisherNames.Trim();
-        //    }
-
-        //    string jurisdictionNames = "";
-        //    if (obj.PropertyValue("geography") != null)
-        //    {
-        //        IEnumerable jurs = (IEnumerable)obj.PropertyValue("geography.country_codes");
-        //        foreach (object jur in jurs)
-        //        {
-        //            jurisdictionNames += jur.ToString() + " ";
-        //        }
-        //        jurisdictionNames = jurisdictionNames.Trim();
-        //    }
-
-        //    double unused = double.NaN;
-
-        //    // create a new climate total metric
-        //    ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(unused, unused, unused, gwpVal, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused);
-
-        //    // create additional data fragment from customObject
-        //    AdditionalEPDData data = new AdditionalEPDData
-        //    {
-        //        Description = obj.PropertyValue("description")?.ToString() ?? "",
-        //        EndOfLifeTreatment = "",
-        //        Id = obj.PropertyValue("id")?.ToString() ?? "",
-        //        IndustryStandards = standards != null ? standards.ToList() : new List<string>(),
-        //        Jurisdiction = jurisdictionNames,
-        //        LifeSpan = lifespan,
-        //        Manufacturer = obj.PropertyValue("manufacturer.name")?.ToString() ?? "",
-        //        PlantName = obj.PropertyValue("plant.name")?.ToString() ?? "",
-        //        PostalCode = int.TryParse(obj.PropertyValue("plant.postal_code")?.ToString() ?? "", out result) ? result : 0,
-        //        Publisher = publisherNames,
-        //        ReferenceYear = referenceYear,
-        //    };
-
-        //    // create a density fragment from customObject => variable
-        //    EPDDensity densityFragment = new EPDDensity
-        //    {
-        //        Density = density,
-        //    };
-
-        //    // create a new epd object
-        //    EnvironmentalProductDeclaration epd = new EnvironmentalProductDeclaration
-        //    {
-        //        //Type = config.Type,
-        //        EnvironmentalMetrics = new List<EnvironmentalMetric> { metric },
-        //        QuantityType = quantityType,
-        //        Name = obj.PropertyValue("name")?.ToString() ?? "",
-        //    };
-
-        //    // Add Additional Data Fragment
-        //    EnvironmentalProductDeclaration epdData = (EnvironmentalProductDeclaration)Engine.Base.Modify.AddFragment(epd, data);
-
-        //    // Add Density Fragment
-        //    if (density != 0)
-        //    {
-        //        EnvironmentalProductDeclaration epdDataDensity = (EnvironmentalProductDeclaration)Engine.Base.Modify.AddFragment(epdData, densityFragment);
-        //        return epdDataDensity;
-        //    }
-        //    else
-        //    {
-        //        return epdData;
-        //    }
-        //}
-
         /***************************************************/
 
-        public static List<EnvironmentalProductDeclaration> fromOpenAPI(CustomObject co, Materials2050Config config, List<CustomObject> resultsObjs)
+        public static EnvironmentalProductDeclaration fromOpenAPI(CustomObject co)
         {
+            EnvironmentalProductDeclaration epd = new EnvironmentalProductDeclaration();
             // OpenAPI call object schema
 
             // basic results parsing data
-            // TODO make a new fragment for API search results
+            ResultsNavigation resultsNavigation = new ResultsNavigation();
 
-            /*int totalCount = (int)co.PropertyValue("TotalProducts");
-            int totalPageCount = (int)co.PropertyValue("countProductsOnPage");
-            int currentPage = (int)co.PropertyValue("current_page");
-            string range = co.PropertyValue("product_range")?.ToString();
-            string next = co.PropertyValue("next")?.ToString();
-            string previous = co.PropertyValue("previous")?.ToString();*/
+            resultsNavigation.TotalProducts = (int)co.PropertyValue("TotalProducts");
+            resultsNavigation.ProductsOnPage = (int)co.PropertyValue("countProductsOnPage");
+            resultsNavigation.CurrentPage = (int)co.PropertyValue("current_page");
+            resultsNavigation.ProductRange = co.PropertyValue("product_range").ToString();
 
-            //List<CustomObject> results = new List<CustomObject>();
-            //try
-            //{
-            //    results = (co.CustomData["results"] as List<object>).Cast<CustomObject>().ToList();
-            //}
-            //catch(Exception ex)
-            //{
-            //    BH.Engine.Base.Compute.RecordError(ex, "Error in accessing the results from API pull from Open API.");
-            //    return null;
-            //}
+            // Not implemented - no use case provided - inaccessible URLs
+            //string next = co.PropertyValue("next")?.ToString();
+            //string previous = co.PropertyValue("previous")?.ToString();
 
-            EnvironmentalProductDeclaration epd = new EnvironmentalProductDeclaration();
-            List<EnvironmentalProductDeclaration> epdList = new List<EnvironmentalProductDeclaration>();
+            // Add additional data where possible 
+            // TODO - The LCA oM fragment is not very well structured and would require significant refactor to be helpful here
+            AdditionalEPDData addData = new AdditionalEPDData();
+            addData.Manufacturer = co.CustomData["company"] as string;
+            addData.Description = co.CustomData["product_type"] as string;
+            addData.Description += $" - {co.CustomData["material_type"] as string}";
+            addData.Manufacturer += $" - {co.CustomData["manufacturing_location"] as string}";
 
-            // Data from the Results Object
-            foreach (CustomObject obj in resultsObjs)
+            epd.Name = co.CustomData["name"] as string;
+
+            // Material Facts object within the Results Object
+            CustomObject materialObj = co.CustomData["material_facts"] as CustomObject;
+
+            double unused = double.NaN;
+            double a1toa3 = double.NaN;
+
+            try
             {
-                AdditionalEPDData fragment = new AdditionalEPDData();
-                fragment.Manufacturer = obj.CustomData["company"] as string;
-                fragment.Description = obj.CustomData["product_type"] as string;
-                fragment.Description += $" - {obj.CustomData["material_type"] as string}";
-                fragment.Manufacturer += $" - {obj.CustomData["manufacturing_location"] as string}";
-                epd.Name = obj.CustomData["name"] as string;
-
-                // Material Facts object within the Results Object
-                CustomObject materialObj = obj.CustomData["material_facts"] as CustomObject;
-
-                double unused = double.NaN;
-                double a1toa3 = double.NaN;
-
-                try
-                {
-                    a1toa3 = (double)materialObj.CustomData["manufacturing"];
-                }
-                catch { }
-
-                ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(unused, unused, unused, a1toa3, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused);
-
-                epd.QuantityType = GetQuantityTypeFromString(materialObj.CustomData["declared_unit"] as string);
-                epd.EnvironmentalMetrics.Add(metric);
-                epd.AddFragment(fragment);
-
-                epdList.Add(epd);
+                a1toa3 = (double)materialObj.CustomData["manufacturing"];
             }
-            return epdList;
+            catch { }
+
+            ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(unused, unused, unused, a1toa3, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused);
+
+            epd.QuantityType = GetQuantityTypeFromString(materialObj.CustomData["declared_unit"] as string);
+            epd.EnvironmentalMetrics.Add(metric);
+
+            // TODO Adding fragments is not working
+            epd.AddFragment(addData);
+            epd.AddFragment(resultsNavigation);
+            return epd;
         }
 
         /***************************************************/
