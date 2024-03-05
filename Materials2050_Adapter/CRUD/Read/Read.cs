@@ -153,15 +153,17 @@ namespace BH.Adapter.Materials2050
                     try
                     {
                         resultsObjs = (co.CustomData["results"] as List<object>).Cast<CustomObject>().ToList();
+
+                        foreach (CustomObject co2 in resultsObjs)
+                        {
+                            epds = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co2, config, resultsObjs);
+                        }
                     }
                     catch (Exception ex)
                     {
                         BH.Engine.Base.Compute.RecordError(ex, "No results were found from the pulled data.");
                         return null;
                     }
-
-                    epds = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co, config, resultsObjs);
-                    //epdDataFromRequest.Add(epdData);
                 }
             }
             return epds;
