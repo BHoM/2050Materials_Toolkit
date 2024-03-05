@@ -34,6 +34,7 @@ using BH.Engine.Base;
 using BH.Engine.Reflection;
 using BH.oM.LifeCycleAssessment;
 using BH.oM.Materials2050;
+using System.Linq;
 
 namespace BH.Adapter.Materials2050
 {
@@ -140,17 +141,30 @@ namespace BH.Adapter.Materials2050
 
             //Convert nested customObject from serialization to list of epdData objects
             List<EnvironmentalProductDeclaration> epdDataFromRequest = new List<EnvironmentalProductDeclaration>();
+            List<EnvironmentalProductDeclaration> epds = new List<EnvironmentalProductDeclaration>();
             object epdObjects = responseObjs[0];
             IEnumerable objList = epdObjects as IEnumerable;
+
             if (objList != null)
             {
                 foreach (CustomObject co in objList)
                 {
-                    EnvironmentalProductDeclaration epdData = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co, config);
-                    epdDataFromRequest.Add(epdData);
+                    List<CustomObject> resultsObjs = new List<CustomObject>();
+                    try
+                    {
+                        resultsObjs = (co.CustomData["results"] as List<object>).Cast<CustomObject>().ToList();
+                    }
+                    catch (Exception ex)
+                    {
+                        BH.Engine.Base.Compute.RecordError(ex, "No results were found from the pulled data.");
+                        return null;
+                    }
+
+                    epds = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co, config, resultsObjs);
+                    //epdDataFromRequest.Add(epdData);
                 }
             }
-            return epdDataFromRequest;
+            return epds;
         }
 
         /***************************************************/
