@@ -47,7 +47,7 @@ namespace BH.Engine.Adapters.Materials2050
             if (parameters.Page > 1)
                 param.Add("page", parameters.Page);
 
-            if (parameters.NameLike != null && parameters.NameLike != "")
+            if (!string.IsNullOrEmpty(parameters.NameLike))
                 param.Add("name", parameters.NameLike);
 
             if(parameters.MaterialType != null && parameters.MaterialType >= 0)

@@ -51,9 +51,9 @@ namespace BH.Adapter.Materials2050
 
             // CustomObjects will vary based on which API is used for the query
             // Only OpenAPI is implemented right now
-            Enum apiT = config.APIName;
             if (config != null)
             {
+                Enum apiT = config.APIName;
                 switch (apiT)
                 {
                     case APIName.Undefined:
@@ -101,12 +101,12 @@ namespace BH.Adapter.Materials2050
             // OpenAPI call object schema
 
             // basic results parsing data
-            ResultsNavigation resultsNavigation = new ResultsNavigation();
-            resultsNavigation.APIName = config.APIName;
-            resultsNavigation.TotalProducts = (int)(obj.PropertyValue("TotalProducts") ?? 0);
-            resultsNavigation.ProductsOnPage = (int)(obj.PropertyValue("countProductsOnPage") ?? 0);
-            resultsNavigation.CurrentPage = (int)(obj.PropertyValue("current_page") ?? 0);
-            resultsNavigation.ProductRange = obj.PropertyValue("product_range")?.ToString() ?? string.Empty;
+            ResultsPagination resultsPagination = new ResultsPagination();
+            resultsPagination.APIName = config.APIName;
+            resultsPagination.TotalProducts = (int)(obj.PropertyValue("TotalProducts") ?? 0);
+            resultsPagination.ProductsOnPage = (int)(obj.PropertyValue("countProductsOnPage") ?? 0);
+            resultsPagination.CurrentPage = (int)(obj.PropertyValue("current_page") ?? 0);
+            resultsPagination.ProductRange = obj.PropertyValue("product_range")?.ToString() ?? string.Empty;
 
             // Not implemented - no use case provided - inaccessible URLs
             //string next = co.PropertyValue("next")?.ToString();
@@ -144,7 +144,7 @@ namespace BH.Adapter.Materials2050
 
             // Add data fragments
             EnvironmentalProductDeclaration epdData = (EnvironmentalProductDeclaration)Modify.AddFragment(epd, addData);
-            EnvironmentalProductDeclaration epdDataNav = (EnvironmentalProductDeclaration)Modify.AddFragment(epdData, resultsNavigation);
+            EnvironmentalProductDeclaration epdDataNav = (EnvironmentalProductDeclaration)Modify.AddFragment(epdData, resultsPagination);
 
             return epdDataNav;
         }
@@ -270,6 +270,3 @@ namespace BH.Adapter.Materials2050
 
     }
 }
-
-
-

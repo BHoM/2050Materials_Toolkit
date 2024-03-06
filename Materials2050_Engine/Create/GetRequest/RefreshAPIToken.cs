@@ -43,7 +43,7 @@ namespace BH.Engine.Adapters.Materials2050
         [Output("NewAPIToken", "A GetRequest with 2050 Materials specific headers and uri")]
         public static string RefreshAPIToken(string apiToken)
         {
-            if(apiToken!=null)
+            if(apiToken != null)
             {
                 // GET 
                 GetRequest request = new BH.oM.Adapters.HTTP.GetRequest
@@ -90,6 +90,3 @@ namespace BH.Engine.Adapters.Materials2050
         /***************************************************/
     }
 }
-
-
-

@@ -45,7 +45,7 @@ namespace BH.Adapter.Materials2050
         /***************************************************/
         protected override IEnumerable<IBHoMObject> IRead(Type type, IList ids, ActionConfig actionConfig = null)
         {
-            dynamic elems = null;
+            List<IBHoMObject> elems = null;
             Materials2050Config config = null;
 
             if (actionConfig is Materials2050Config)
@@ -64,17 +64,11 @@ namespace BH.Adapter.Materials2050
         {
             // Determine the API type to be used for the request
             string apiName = "";
-            Enum apiT = config.APIName;
             if(config != null)
             {
+                Enum apiT = config.APIName;
                 switch (apiT)
                 {
-                    case APIName.Undefined:
-                        {
-                            apiName = "";
-                            BH.Engine.Base.Compute.RecordError("Please select which API you would like to query.");
-                            break;
-                        }
                     case APIName.OpenAPI:
                         {
                             apiName = "get_products_open_api";
@@ -100,12 +94,14 @@ namespace BH.Adapter.Materials2050
                             break;
                         }
                     default:
-                        apiName = "get_products_open_api";
+                        apiName = "";
+                        BH.Engine.Base.Compute.RecordError("Please select which API you would like to query.");
                         break;
                 }
             }
             else
             {
+                BH.Engine.Base.Compute.RecordWarning("No config was provided. Using OpenAPI as the default 2050 Materials API for all queries.");
                 apiName = "get_products_open_api";
             }
 
@@ -118,7 +114,7 @@ namespace BH.Adapter.Materials2050
             string response = BH.Engine.Adapters.HTTP.Compute.MakeRequest(epdGetRequest);
             List<object> responseObjs = new List<object>();
 
-            if (response == null)
+            if (string.IsNullOrEmpty(response))
             {
                 BH.Engine.Base.Compute.RecordWarning("No response received, API token and connection.");
                 return null;
@@ -135,42 +131,48 @@ namespace BH.Adapter.Materials2050
             }
             else
             {
-                BH.Engine.Base.Compute.RecordWarning("Response is not a valid JSON. How'd that happen?");
+                BH.Engine.Base.Compute.RecordWarning("Response is not a valid JSON. Please check your config and try again.");
                 return null;
             }
 
             //Convert nested customObject from serialization to list of epdData objects
             List<EnvironmentalProductDeclaration> epds = new List<EnvironmentalProductDeclaration>();
             EnvironmentalProductDeclaration epd = new EnvironmentalProductDeclaration();
-            object epdObjects = responseObjs[0];
-            IEnumerable objList = epdObjects as IEnumerable;
-            int resultCount = 0;
-
-            if (objList != null)
+            
+            if(responseObjs.Count >= 0) 
             {
-                foreach (CustomObject co in objList)
-                {
-                    List<CustomObject> resultsObjs = new List<CustomObject>();
-                    try
-                    {
-                        resultsObjs = (co.CustomData["results"] as List<object>).Cast<CustomObject>().ToList();
+                object epdObjects = responseObjs[0]; // we always want the zero index item. In the event it's the wrong data, other errors will be triggered.
+                IEnumerable objList = epdObjects as IEnumerable;
 
-                        foreach (CustomObject co2 in resultsObjs)
+                if (objList != null)
+                {
+                    foreach (CustomObject co in objList)
+                    {
+                        List<CustomObject> resultsObjs = new List<CustomObject>();
+                        try
                         {
-                            epd = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co, co2, config);
-                            epds.Add(epd);
-                            resultCount++;
+                            resultsObjs = (co.CustomData["results"] as List<object>).Cast<CustomObject>().ToList();
+
+                            foreach (CustomObject co2 in resultsObjs)
+                            {
+                                epds.Add(Convert.ToEnvironmentalProductDeclaration(co, co2, config));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            BH.Engine.Base.Compute.RecordError(ex, "No results were found from the pulled data.");
+                            return null;
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        BH.Engine.Base.Compute.RecordError(ex, "No results were found from the pulled data.");
-                        return null;
-                    }
                 }
+                BH.Engine.Base.Compute.RecordNote($"{epds.Count} EPDs have been converted from the 2050 Materials {apiName} request.");
+                return epds;
+
+            } else
+            {
+                BH.Engine.Base.Compute.RecordError("No data was received from the API call");
+                return null;
             }
-            BH.Engine.Base.Compute.RecordNote($"{resultCount} EPDs have been converted from the 2050 Materials {apiT} request.");
-            return epds;
         }
 
         /***************************************************/

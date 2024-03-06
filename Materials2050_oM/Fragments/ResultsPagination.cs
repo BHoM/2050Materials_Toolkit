@@ -27,7 +27,7 @@ using System.Collections.Generic;
 namespace BH.oM.Materials2050.Fragments
 {
     [Description("A data fragment containing API-specific values to help navigate paginated results from the GET request.")]
-    public class ResultsNavigation : IFragment
+    public class ResultsPagination : IFragment
     {
         [Description("The API used for the GET request.")]
         public virtual APIName APIName { get; set; } = APIName.Undefined;
