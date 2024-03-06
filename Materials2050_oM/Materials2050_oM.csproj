@@ -17,6 +17,7 @@
     <Reference Include="Adapter_oM">
       <HintPath>$(ProgramData)\BHoM\Assemblies\Adapter_oM.dll</HintPath>
       <Private>False</Private>
+	  <SpecificVersion>false</SpecificVersion>
     </Reference>
     <Reference Include="BHoM">
       <HintPath>$(ProgramData)\BHoM\Assemblies\BHoM.dll</HintPath>
@@ -26,6 +27,7 @@
     <Reference Include="LifeCycleAssessment_oM">
       <HintPath>$(ProgramData)\BHoM\Assemblies\LifeCycleAssessment_oM.dll</HintPath>
       <Private>False</Private>
+	  <SpecificVersion>false</SpecificVersion>
     </Reference>
   </ItemGroup>
 

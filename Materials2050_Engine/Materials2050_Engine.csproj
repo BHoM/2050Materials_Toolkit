@@ -26,26 +26,32 @@
     <Reference Include="BHoM_Engine">
       <HintPath>$(ProgramData)\BHoM\Assemblies\BHoM_Engine.dll</HintPath>
       <Private>False</Private>
+	  <SpecificVersion>false</SpecificVersion>
     </Reference>
     <Reference Include="HTTP_Adapter">
       <HintPath>$(ProgramData)\BHoM\Assemblies\HTTP_Adapter.dll</HintPath>
       <Private>False</Private>
+	  <SpecificVersion>false</SpecificVersion>
     </Reference>
     <Reference Include="HTTP_Engine">
       <HintPath>$(ProgramData)\BHoM\Assemblies\HTTP_Engine.dll</HintPath>
       <Private>False</Private>
+	  <SpecificVersion>false</SpecificVersion>
     </Reference>
     <Reference Include="HTTP_oM">
       <HintPath>$(ProgramData)\BHoM\Assemblies\HTTP_oM.dll</HintPath>
       <Private>False</Private>
+	  <SpecificVersion>false</SpecificVersion>
     </Reference>
     <Reference Include="LifeCycleAssessment_oM">
       <HintPath>$(ProgramData)\BHoM\Assemblies\LifeCycleAssessment_oM.dll</HintPath>
       <Private>False</Private>
+	  <SpecificVersion>false</SpecificVersion>
     </Reference>
     <Reference Include="Serialiser_Engine">
       <HintPath>$(ProgramData)\BHoM\Assemblies\Serialiser_Engine.dll</HintPath>
       <Private>False</Private>
+	  <SpecificVersion>false</SpecificVersion>
     </Reference>
   </ItemGroup>
 
