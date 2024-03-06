@@ -128,13 +128,21 @@ namespace BH.Adapter.Materials2050
             double unused = double.NaN;
             double a3 = double.NaN;
 
-            try
+            var value = materialObj.CustomData["manufacturing"];
+            if(value != null)
             {
-                a3 = (double)materialObj.CustomData["manufacturing"];
-            }
-            catch (Exception ex)
+                try
+                {
+                    a3 = (double)materialObj.CustomData["manufacturing"];
+                } 
+                catch //(Exception ex)
+                {
+                    // This warning is important to an extent, but the UX is very unhelpful. Would be better to be returned as a log in the future. For now all missing values are returned as double.NaN
+                    // BH.Engine.Base.Compute.RecordWarning(ex, $"A3 Values were not found for {epd.Name}. Please verify your results."); 
+                }
+            } else
             {
-                BH.Engine.Base.Compute.RecordWarning(ex, $"A3 Values were not found for {epd.Name}. Please verify your results.");
+                a3 = double.NaN;
             }
 
             ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(unused, unused, a3, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused);

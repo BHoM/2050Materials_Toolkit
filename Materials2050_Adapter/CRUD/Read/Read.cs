@@ -45,14 +45,14 @@ namespace BH.Adapter.Materials2050
         /***************************************************/
         protected override IEnumerable<IBHoMObject> IRead(Type type, IList ids, ActionConfig actionConfig = null)
         {
-            List<IBHoMObject> elems = null;
+            List<EnvironmentalProductDeclaration> elems = new List<EnvironmentalProductDeclaration>();
             Materials2050Config config = null;
 
             if (actionConfig is Materials2050Config)
                 config = actionConfig as Materials2050Config;
 
             if (type == typeof(EnvironmentalProductDeclaration))
-                elems = ReadEnvironmentalProductDeclaration(ids as dynamic, config);
+                elems = ReadEnvironmentalProductDeclaration(config);
 
             return elems;
         }
@@ -60,7 +60,7 @@ namespace BH.Adapter.Materials2050
         /**** Private specific read methods             ****/
         /***************************************************/
 
-        private List<EnvironmentalProductDeclaration> ReadEnvironmentalProductDeclaration(List<string> ids = null, Materials2050Config config = null)
+        private List<EnvironmentalProductDeclaration> ReadEnvironmentalProductDeclaration(Materials2050Config config = null)
         {
             // Determine the API type to be used for the request
             string apiName = "";
