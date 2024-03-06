@@ -157,7 +157,7 @@ namespace BH.Adapter.Materials2050
 
                         foreach (CustomObject co2 in resultsObjs)
                         {
-                            epd = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co2, config);
+                            epd = Adapter.Materials2050.Convert.ToEnvironmentalProductDeclaration(co, co2, config);
                             epds.Add(epd);
                             resultCount++;
                         }

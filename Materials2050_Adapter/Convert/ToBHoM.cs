@@ -44,7 +44,7 @@ namespace BH.Adapter.Materials2050
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static EnvironmentalProductDeclaration ToEnvironmentalProductDeclaration(this CustomObject obj, Materials2050Config config)
+        public static EnvironmentalProductDeclaration ToEnvironmentalProductDeclaration(this CustomObject obj, CustomObject resultObj, Materials2050Config config)
         {
             EnvironmentalProductDeclaration epd = new EnvironmentalProductDeclaration();
             List<EnvironmentalProductDeclaration> epdList = new List<EnvironmentalProductDeclaration>();
@@ -63,7 +63,7 @@ namespace BH.Adapter.Materials2050
                         }
                     case APIName.OpenAPI:
                         {
-                            epd = fromOpenAPI(obj);
+                            epd = fromOpenAPI(obj, resultObj, config);
                             break;
                         }
                     case APIName.GenericMaterialsAPI:
@@ -95,18 +95,18 @@ namespace BH.Adapter.Materials2050
 
         /***************************************************/
 
-        public static EnvironmentalProductDeclaration fromOpenAPI(CustomObject co)
+        public static EnvironmentalProductDeclaration fromOpenAPI(CustomObject obj, CustomObject resultObj, Materials2050Config config)
         {
             EnvironmentalProductDeclaration epd = new EnvironmentalProductDeclaration();
             // OpenAPI call object schema
 
             // basic results parsing data
             ResultsNavigation resultsNavigation = new ResultsNavigation();
-
-            resultsNavigation.TotalProducts = (int)co.PropertyValue("TotalProducts");
-            resultsNavigation.ProductsOnPage = (int)co.PropertyValue("countProductsOnPage");
-            resultsNavigation.CurrentPage = (int)co.PropertyValue("current_page");
-            resultsNavigation.ProductRange = co.PropertyValue("product_range").ToString();
+            resultsNavigation.APIName = config.APIName;
+            resultsNavigation.TotalProducts = (int)(obj.PropertyValue("TotalProducts") ?? 0);
+            resultsNavigation.ProductsOnPage = (int)(obj.PropertyValue("countProductsOnPage") ?? 0);
+            resultsNavigation.CurrentPage = (int)(obj.PropertyValue("current_page") ?? 0);
+            resultsNavigation.ProductRange = obj.PropertyValue("product_range")?.ToString() ?? string.Empty;
 
             // Not implemented - no use case provided - inaccessible URLs
             //string next = co.PropertyValue("next")?.ToString();
@@ -115,15 +115,15 @@ namespace BH.Adapter.Materials2050
             // Add additional data where possible 
             // TODO - The LCA oM fragment is not very well structured and would require significant refactor to be helpful here
             AdditionalEPDData addData = new AdditionalEPDData();
-            addData.Manufacturer = co.CustomData["company"] as string;
-            addData.Description = co.CustomData["product_type"] as string;
-            addData.Description += $" - {co.CustomData["material_type"] as string}";
-            addData.Manufacturer += $" - {co.CustomData["manufacturing_location"] as string}";
+            addData.Manufacturer = resultObj.CustomData["company"]?.ToString() ?? "No Manufacturer recorded";
+            addData.Description = resultObj.CustomData["product_type"]?.ToString() ?? "No product type recorded.";
+            addData.Description += $" - {resultObj.CustomData["material_type"]?.ToString() ?? "No material type recorded."}";
+            addData.Manufacturer += $" - {resultObj.CustomData["manufacturing_location"]?.ToString() ?? "No Manufacturer location recorded"}";
 
-            epd.Name = co.CustomData["name"] as string;
+            epd.Name = resultObj.CustomData["name"]?.ToString() ?? null;
 
             // Material Facts object within the Results Object
-            CustomObject materialObj = co.CustomData["material_facts"] as CustomObject;
+            CustomObject materialObj = resultObj.CustomData["material_facts"] as CustomObject;
 
             double unused = double.NaN;
             double a3 = double.NaN;
@@ -132,17 +132,21 @@ namespace BH.Adapter.Materials2050
             {
                 a3 = (double)materialObj.CustomData["manufacturing"];
             }
-            catch { }
+            catch (Exception ex)
+            {
+                BH.Engine.Base.Compute.RecordWarning(ex, $"A3 Values were not found for {epd.Name}. Please verify your results.");
+            }
 
             ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(unused, unused, a3, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused);
 
             epd.QuantityType = GetQuantityTypeFromString(materialObj.CustomData["declared_unit"] as string);
             epd.EnvironmentalMetrics.Add(metric);
 
-            // TODO Adding fragments is not working
-            epd.AddFragment(addData);
-            epd.AddFragment(resultsNavigation);
-            return epd;
+            // Add data fragments
+            EnvironmentalProductDeclaration epdData = (EnvironmentalProductDeclaration)Modify.AddFragment(epd, addData);
+            EnvironmentalProductDeclaration epdDataNav = (EnvironmentalProductDeclaration)Modify.AddFragment(epdData, resultsNavigation);
+
+            return epdDataNav;
         }
 
         /***************************************************/
