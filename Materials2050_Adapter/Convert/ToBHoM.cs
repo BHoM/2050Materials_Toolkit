@@ -126,14 +126,14 @@ namespace BH.Adapter.Materials2050
             CustomObject materialObj = resultObj.CustomData["material_facts"] as CustomObject;
 
             double unused = double.NaN;
-            double a3 = double.NaN;
+            double a1toa3 = double.NaN;
 
             var value = materialObj.CustomData["manufacturing"];
             if(value != null)
             {
                 try
                 {
-                    a3 = (double)materialObj.CustomData["manufacturing"];
+                    a1toa3 = (double)materialObj.CustomData["manufacturing"];
                 } 
                 catch //(Exception ex)
                 {
@@ -145,7 +145,7 @@ namespace BH.Adapter.Materials2050
                 a3 = double.NaN;
             }
 
-            ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(unused, unused, a3, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused);
+            ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(unused, unused, unused, a1toa3, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused);
 
             epd.QuantityType = GetQuantityTypeFromString(materialObj.CustomData["declared_unit"] as string);
             epd.EnvironmentalMetrics.Add(metric);
