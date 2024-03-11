@@ -63,7 +63,7 @@ namespace BH.Adapter.Materials2050
                         }
                     case APIName.OpenAPI:
                         {
-                            epd = fromOpenAPI(obj, resultObj, config);
+                            epd = FromOpenAPI(obj, resultObj, config);
                             break;
                         }
                     case APIName.GenericMaterialsAPI:
@@ -95,7 +95,7 @@ namespace BH.Adapter.Materials2050
 
         /***************************************************/
 
-        public static EnvironmentalProductDeclaration fromOpenAPI(CustomObject obj, CustomObject resultObj, Materials2050Config config)
+        public static EnvironmentalProductDeclaration FromOpenAPI(CustomObject obj, CustomObject resultObj, Materials2050Config config)
         {
             EnvironmentalProductDeclaration epd = new EnvironmentalProductDeclaration();
             // OpenAPI call object schema
@@ -142,7 +142,7 @@ namespace BH.Adapter.Materials2050
                 }
             } else
             {
-                a3 = double.NaN;
+                a1toa3 = double.NaN;
             }
 
             ClimateChangeTotalMetric metric = new ClimateChangeTotalMetric(unused, unused, unused, a1toa3, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused, unused);
