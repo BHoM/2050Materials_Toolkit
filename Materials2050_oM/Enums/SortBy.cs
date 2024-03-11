@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
@@ -20,35 +20,21 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Base;
-using BH.oM.Base.Attributes;
-using BH.oM.Adapters.Materials2050;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.Text;
 
-namespace BH.Engine.Adapters.Materials2050
+namespace BH.oM.Materials2050
 {
-    public static partial class Modify
+    [Description("Enum of all available sort by options. Used for filtering material data.")]
+    public enum SortBy
     {
-        /***************************************************/
-        /**** Public Methods                            ****/
-        /***************************************************/
-
-        //[Description("Description of the method. Will appear in the UI tooltip.")]
-        //[Input("objectToModify", "Description of the input. Will appear in the UI tooltip.")]
-        //[Output("outputName", "Description of the output. Will appear in the UI tooltip.")]
-        //public static ExampleObject ExampleCreateMethod(ExampleObject objectToModify)
-        //{
-        //    // This method will appear in every UI (e.g. Grasshopper) as a component.
-        //    // Find it using the CTRL+Shift+B search bar, or by navigating the `Create` component (Engine tab) right click menu.
-        //    throw new NotImplementedException();
-        //}
-
-        /***************************************************/
-
+        Undefined,
+        CarbonSorting,
+        Latest,
+        RecycledContent,
+        RecyclableContent
     }
 }
-
 

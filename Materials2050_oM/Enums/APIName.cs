@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
@@ -20,32 +20,21 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-//using BH.oM.Adapters.Materials2050;
-using BH.oM.Base;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace BH.Adapter.Materials2050
+namespace BH.oM.Materials2050
 {
-    public static partial class Convert
+    [Description("All 2050 Materials APIs. OpenAPI is free to use and requires a 2050 Materials account. All other APIs are purchasable from 2050 Materials")]
+    public enum APIName
     {
-        /***************************************************/
-        /**** Public Methods                            ****/
-        /***************************************************/
-
-        // Add methods for converting to BHoM from the specific software types. 
-        // Example:
-        //public static BHoMObject FromMaterials2050(this ExampleObject node)
-        //{
-        //    //Insert code for convertion
-        //    throw new NotImplementedException();
-        //}
-
-        /***************************************************/
+        Undefined,
+        GenericMaterialsAPI,
+        GlobalWarmingAPI,
+        OpenAPI,
+        ProductAPI
     }
 }
-
 

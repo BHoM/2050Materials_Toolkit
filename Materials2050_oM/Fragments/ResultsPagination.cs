@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
@@ -20,32 +20,32 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-//using BH.oM.Adapters.Materials2050;
+using System.ComponentModel;
 using BH.oM.Base;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BH.Adapter.Materials2050
+namespace BH.oM.Materials2050.Fragments
 {
-    public static partial class Convert
+    [Description("A data fragment containing API-specific values to help navigate paginated results from the GET request.")]
+    public class ResultsPagination : IFragment
     {
-        /***************************************************/
-        /**** Public Methods                            ****/
-        /***************************************************/
+        [Description("The API used for the GET request.")]
+        public virtual APIName APIName { get; set; } = APIName.Undefined;
 
-        // Add methods for converting from BHoM to the specific software types
-        // Example:
-        //public static ExampleObject ToMaterials2050(this BHoMObject node)
-        //{
-        //    //Insert code for convertion
-        //    throw new NotImplementedException();
-        //}
+        [Description("Total number of products received from the GET request.")]
+        public virtual int TotalProducts { get; set; } = 0;
 
-        /***************************************************/
+        [Description("Number of products on the current page of the results.")]
+        public virtual int ProductsOnPage { get; set; } = 0;
+
+        [Description("The current page number.")]
+        public virtual int CurrentPage { get; set; } = 0;
+
+        [Description("The indexed products currently being viewed.")]
+        public virtual string ProductRange { get; set; } = null;
     }
 }
+
+
 
 

@@ -20,14 +20,18 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Adapter;
-using BH.oM.Base.Attributes;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BH.oM.Base;
+using BH.Adapter;
+using System.Net;
+using System.Net.Http;
+using System.ComponentModel;
+using BH.oM.Base.Attributes;
+using BH.Engine.Adapters.Materials2050;
 
 namespace BH.Adapter.Materials2050
 {
@@ -37,34 +41,23 @@ namespace BH.Adapter.Materials2050
         /**** Constructors                              ****/
         /***************************************************/
 
-        [Description("Adapter for Materials2050.")]
-        [Output("The created Materials2050 adapter.")]
-        public Materials2050Adapter()
+        [Description("Adapter to connect to 2050 Materials API.")]
+        [Input("apiToken", "Provide 2050 Materials API Token")]
+        [Output("adapter", "Adapter results")]
+        public Materials2050Adapter(string apiToken = "", bool active = false)
         {
-            // The Adapter constructor can be used to configure the Adapter behaviour.
-            // For example:
-            m_AdapterSettings.DefaultPushType = oM.Adapter.PushType.CreateOnly; // Adapter `Push` Action simply calls "Create" method.
-            
-            // See the wiki, the AdapterSettings object and other Adapters to see how it can be configured.
-
-            // If your toolkit needs to define this.AdapterComparers and or this.DependencyTypes,
-            // this constructor has to populate those properties.
-            // See the wiki for more information.
+            if (active)
+            {
+                m_apiToken = apiToken;
+            }
         }
 
-        // You can add any other constructors that take more inputs here. 
-
         /***************************************************/
-        /**** Private  Fields                           ****/
+        /*** Private Fields                              ***/
         /***************************************************/
 
-        // You can add any private variable that should be in common to any other adapter methods here.
-        // If you need to add some private methods, please consider first what their nature is:
-        // if a method does not need any external call (API call, connection call, etc.)
-        // we place them in the Engine project, and then reference them from the Adapter.
-        // See the wiki for more information.
+        private static string m_apiToken = null;
 
-        /***************************************************/
     }
 }
 
